@@ -1,0 +1,7 @@
+server_url: "http://127.0.0.1:8000"
+agent_secret: "test-secret-phase1"
+heartbeat_interval: 300
+inventory_interval: 21600
+log_level: info
+uuid_file: "agent.uuid"
+tls_skip_verify: true
