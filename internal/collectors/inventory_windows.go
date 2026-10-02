@@ -217,19 +217,29 @@ func collectInstalledSoftware() []map[string]any {
 			version, _, _ := sk.GetStringValue("DisplayVersion")
 			publisher, _, _ := sk.GetStringValue("Publisher")
 			loc, _, _ := sk.GetStringValue("InstallLocation")
+			installDateRaw, _, _ := sk.GetStringValue("InstallDate")
+			var installDate any
+			// Registry sering format YYYYMMDD
+			if len(installDateRaw) == 8 {
+				installDate = installDateRaw[0:4] + "-" + installDateRaw[4:6] + "-" + installDateRaw[6:8]
+			}
 			key := display + "|" + version
 			if seen[key] {
 				sk.Close()
 				continue
 			}
 			seen[key] = true
-			out = append(out, map[string]any{
+			item := map[string]any{
 				"name":             display,
 				"publisher":        publisher,
 				"version":          version,
 				"architecture":     runtime.GOARCH,
 				"install_location": loc,
-			})
+			}
+			if installDate != nil {
+				item["install_date"] = installDate
+			}
+			out = append(out, item)
 			sk.Close()
 		}
 		k.Close()
